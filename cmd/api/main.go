@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/cc-andres-portillo/cv-parser/internal/adapters/handlers"
-	"github.com/cc-andres-portillo/cv-parser/internal/adapters/storages"
-	"github.com/cc-andres-portillo/cv-parser/internal/core/ports"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/cc-andres-portillo/cv-parser/internal/adapters/handlers"
+	storage "github.com/cc-andres-portillo/cv-parser/internal/adapters/storages"
+	"github.com/cc-andres-portillo/cv-parser/internal/core/ports"
 )
 
 func main() {
