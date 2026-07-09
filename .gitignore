@@ -1,0 +1,27 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build output
+*.test
+/bin/
+
+# Output of the go coverage tool
+*.out
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+
+# Environment files
+.env
+
+# Dependency directories (remove if you vendor deps)
+vendor/
+
+# log files
+*.log
