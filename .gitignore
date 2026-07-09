@@ -23,5 +23,10 @@
 # Dependency directories (remove if you vendor deps)
 vendor/
 
+# Temporary test and sample files
+*.docx
+*.zip
+tmp_*/
+
 # log files
 *.log

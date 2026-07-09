@@ -3,7 +3,9 @@ package storage
 import (
 	"archive/zip"
 	"io/ioutil"
+	"path/filepath"
 	"regexp"
+	"strings"
 )
 
 // ExtractTextFromDocx realiza una extracción básica de texto desde el archivo .docx
@@ -17,7 +19,7 @@ func (a *DocumentExtractorAdapter) ExtractTextFromDocx(filePath string) (string,
 
 	var content []byte
 	for _, f := range r.File {
-		if f.Name == "word/document.xml" {
+		if filepath.ToSlash(f.Name) == "word/document.xml" {
 			rc, err := f.Open()
 			if err != nil {
 				return "", err
@@ -36,8 +38,11 @@ func (a *DocumentExtractorAdapter) ExtractTextFromDocx(filePath string) (string,
 		return "", nil
 	}
 
-	// Eliminar tags XML simples
+	// Reemplazar cierres de párrafo por nueva línea y eliminar tags XML simples
+	contentStr := string(content)
+	contentStr = strings.ReplaceAll(contentStr, "</w:p>", "\n")
+	contentStr = strings.ReplaceAll(contentStr, "</p>", "\n")
 	re := regexp.MustCompile("<[^>]+>")
-	text := re.ReplaceAllString(string(content), "")
+	text := strings.TrimSpace(re.ReplaceAllString(contentStr, ""))
 	return text, nil
 }
