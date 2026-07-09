@@ -21,37 +21,24 @@ func main() {
 	mongoURI := os.Getenv("MONGO_URI")
 	mongoDBName := os.Getenv("MONGO_DB_NAME")
 
-	// Evitar errores de "declared and not used" mientras está en modo mock
-	_ = ctx
-	_ = mongoURI
-	_ = mongoDBName
-
 	// 2. Adaptador de archivos
 	extractorAdapter := storage.NewDocumentExtractorAdapter()
 
-	// =========================================================================
-	// 🌟 INTERRUPTOR DE BASE DE DATOS (MOCK vs MONGO)
-	// =========================================================================
-	
-	// Opción A: Modo simulado (Para pruebas sin base de datos)
-	dbAdapter := storage.NewMockDatabaseAdapter()
-
-	// Opción B: Modo MongoDB Real (Para producción)
-	// Para activar MongoDB, se debe COMENTAR la Opción A anterior
-	// y DESCOMENTAR las siguientes líneas:
-	/*
-	if mongoURI == "" || mongoDBName == "" {
-		log.Fatal("MONGO_URI y MONGO_DB_NAME son requeridos en el .env")
+	// 3. Adaptador de base de datos
+	var dbAdapter ports.CVRepositoryPort
+	if mongoURI != "" && mongoDBName != "" {
+		mongoAdapter, err := storage.ConectarAMongo(ctx, mongoURI, mongoDBName)
+		if err != nil {
+			log.Fatalf("No se pudo iniciar el almacenamiento en MongoDB: %v", err)
+		}
+		dbAdapter = mongoAdapter
+		log.Println("Usando MongoDB como almacenamiento")
+	} else {
+		dbAdapter = storage.NewMockDatabaseAdapter()
+		log.Println("Usando MockDatabaseAdapter (sin MongoDB)")
 	}
-	mongoAdapter, err := storage.ConectarAMongo(ctx, mongoURI, mongoDBName)
-	if err != nil {
-		log.Fatalf("No se pudo iniciar el almacenamiento: %v", err)
-	}
-	dbAdapter := mongoAdapter
-	*/
-	// =========================================================================
 
-	// 3. Inyección de dependencias al Núcleo de Negocio
+	// 4. Inyección de dependencias al Núcleo de Negocio
 	cvService := ports.NewCVService(extractorAdapter, dbAdapter)
 
 	// 4. Adaptador de Entrada HTTP

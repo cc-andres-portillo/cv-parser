@@ -26,7 +26,7 @@ go run ./cmd/api
 
 Variables de entorno (opcional)
 - `PORT` — puerto en que el servidor escucha (por defecto `:8080`)
-- `MONGO_URI` — URI de MongoDB (si quieres usar Mongo real)
+- `MONGO_URI` — URI de MongoDB. Si se establece junto a `MONGO_DB_NAME`, la aplicación usará MongoDB automáticamente.
 - `MONGO_DB_NAME` — nombre de la base de datos en Mongo
 
 En PowerShell:
@@ -38,9 +38,12 @@ $env:MONGO_DB_NAME="cv_db"
 go run ./cmd/api
 ```
 
+Si no estableces `MONGO_URI` y `MONGO_DB_NAME`, el servicio funciona con `MockDatabaseAdapter` y no requiere MongoDB.
+
 Notas
 - El módulo del proyecto está declarado como `github.com/cc-andres-portillo/cv-parser` en `go.mod`.
-- El proyecto ya incluye un adaptador `MockDatabaseAdapter` para desarrollo sin MongoDB.
+- El servicio extrae texto de `.pdf` y `.docx` y responde JSON.
+- Para pruebas locales, sigue usando `go run ./cmd/api`.
 
 Licencia
 - Revisa y añade una licencia si es necesario.
