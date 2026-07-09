@@ -40,6 +40,16 @@ go run ./cmd/api
 
 Si no estableces `MONGO_URI` y `MONGO_DB_NAME`, el servicio funciona con `MockDatabaseAdapter` y no requiere MongoDB.
 
+Ejemplo de petición `curl`
+
+```bash
+curl -X POST \
+  -F "cv=@/ruta/a/tu/cv.docx" \
+  http://localhost:8080/api/v1/parse-cv
+```
+
+Reemplaza `/ruta/a/tu/cv.docx` por la ruta de tu archivo `.docx` o `.pdf`.
+
 Notas
 - El módulo del proyecto está declarado como `github.com/cc-andres-portillo/cv-parser` en `go.mod`.
 - El servicio extrae texto de `.pdf` y `.docx` y responde JSON.
