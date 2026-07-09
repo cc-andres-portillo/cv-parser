@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/joho/godotenv"
+
 	"github.com/cc-andres-portillo/cv-parser/internal/adapters/handlers"
 	storage "github.com/cc-andres-portillo/cv-parser/internal/adapters/storages"
 	"github.com/cc-andres-portillo/cv-parser/internal/core/ports"
@@ -13,6 +15,11 @@ import (
 
 func main() {
 	ctx := context.Background()
+
+	// Cargar variables desde .env si existe (no fatal si falta)
+	if err := godotenv.Load(); err != nil {
+		log.Println("No se cargó .env (continuando con variables de entorno):", err)
+	}
 
 	puertoServidor := os.Getenv("PORT")
 	if puertoServidor == "" {
