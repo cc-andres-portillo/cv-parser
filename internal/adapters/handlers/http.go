@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"bytes"
-	"github.com/cc-andres-portillo/cv-parser/internal/core/ports"
 	"encoding/json"
 	"io"
 	"net/http"
 	"path/filepath"
 	"strings"
+
+	"github.com/cc-andres-portillo/cv-parser/internal/core/ports"
 )
 
 type HTTPCVHandler struct {
@@ -42,8 +43,7 @@ func (h *HTTPCVHandler) ParseCVHandler(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 
 	ext := strings.ToLower(filepath.Ext(header.Filename))
-	
-	// Leer el archivo a un buffer en memoria para pasarlo como io.ReaderAt
+
 	var buf bytes.Buffer
 	size, err := io.Copy(&buf, file)
 	if err != nil {
