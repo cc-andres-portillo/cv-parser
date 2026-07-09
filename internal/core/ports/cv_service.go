@@ -2,12 +2,13 @@ package ports
 
 import (
 	"context"
-	"github.com/cc-andres-portillo/cv-parser/internal/core/domain"
 	"fmt"
 	"io"
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/cc-andres-portillo/cv-parser/internal/core/domain"
 )
 
 type CVService struct {
@@ -26,12 +27,10 @@ func (s *CVService) ParseCV(ctx context.Context, file io.ReaderAt, size int64, e
 	var textoCV string
 	var err error
 
-	// Delegar la extracción al adaptador correspondiente según la extensión
 	switch strings.ToLower(extension) {
 	case ".pdf":
 		textoCV, err = s.extractor.ExtractTextFromPDF(file, size)
 	case ".docx":
-		// Docx requiere archivo en disco temporal debido a limitaciones de su librería
 		tempFile, tmpErr := os.CreateTemp("", "cv-core-*.docx")
 		if tmpErr != nil {
 			return domain.FormularioCV{}, tmpErr
@@ -52,7 +51,6 @@ func (s *CVService) ParseCV(ctx context.Context, file io.ReaderAt, size int64, e
 
 	resultado := s.ejecutarReglasDeNegocio(textoCV)
 
-	// 🌟 CASO DE USO: Persistimos los datos estructurados en la BD usando el puerto
 	if err := s.repo.Save(ctx, &resultado); err != nil {
 		return domain.FormularioCV{}, fmt.Errorf("error al persistir en BD: %v", err)
 	}
